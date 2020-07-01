@@ -1,10 +1,10 @@
 // import AppError from '../errors/AppError';
 
 import { getCustomRepository } from 'typeorm';
-import TransactionRepository from '../repositories/TransactionsRepository';
+import TransactionsRepository from '../repositories/TransactionsRepository';
 import Transaction from '../models/Transaction';
 
-import FindOrCreateCategoryService from './FindOrCreateCategoryService';
+import CategoriesRepository from '../repositories/CategoriesRepository';
 
 interface Request {
   title: string;
@@ -20,22 +20,24 @@ class CreateTransactionService {
     type,
     category,
   }: Request): Promise<Transaction> {
-    const FindOrCreateCategory = new FindOrCreateCategoryService();
+    const categoriesRepository = getCustomRepository(CategoriesRepository);
 
-    const newCategory = await FindOrCreateCategory.execute({ title: category });
+    const newCategory = await categoriesRepository.findByTitleOrCreate({
+      title: category,
+    });
 
     const category_id = newCategory.id;
 
-    const transactionRepository = getCustomRepository(TransactionRepository);
+    const transactionsRepository = getCustomRepository(TransactionsRepository);
 
-    const transaction = await transactionRepository.create({
+    const transaction = await transactionsRepository.create({
       title,
       value,
       type,
       category_id,
     });
 
-    await transactionRepository.save(transaction);
+    await transactionsRepository.save(transaction);
 
     return transaction;
   }
