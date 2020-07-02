@@ -23,7 +23,9 @@ export default class Transactions1593621981659 implements MigrationInterface {
           },
           {
             name: 'value',
-            type: 'int',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
           },
           {
             name: 'category_id',

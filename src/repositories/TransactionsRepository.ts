@@ -18,7 +18,7 @@ class TransactionsRepository extends Repository<Transaction> {
     });
 
     const income = incomeTransactions.reduce((accumulator, currentValue) => {
-      return accumulator + currentValue.value;
+      return accumulator + Number(currentValue.value);
     }, 0);
 
     const outcomeTransactions = await this.find({
@@ -28,7 +28,7 @@ class TransactionsRepository extends Repository<Transaction> {
     });
 
     const outcome = outcomeTransactions.reduce((accumulator, currentValue) => {
-      return accumulator + currentValue.value;
+      return accumulator + Number(currentValue.value);
     }, 0);
 
     const total = income - outcome;
